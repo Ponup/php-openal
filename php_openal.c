@@ -822,7 +822,7 @@ zend_module_entry openal_module_entry = {
 	NULL, /* RINIT */
 	NULL, /* RSHUTDOWN */
 	PHP_MINFO(openal),
-	NO_VERSION_YET,
+	PHP_OPENAL_EXTVER,
 	STANDARD_MODULE_PROPERTIES
 };
 
