@@ -822,7 +822,7 @@ zend_module_entry openal_module_entry = {
 	NULL, /* RINIT */
 	NULL, /* RSHUTDOWN */
 	PHP_MINFO(openal),
-	PHP_OPENAL_EXTVER,
+	PHP_OPENAL_VERSION,
 	STANDARD_MODULE_PROPERTIES
 };
 
@@ -901,6 +901,7 @@ PHP_MINFO_FUNCTION(openal)
 {
 	php_info_print_table_start();
 	php_info_print_table_row(2, "OpenAL Extension", "enabled");
+	php_info_print_table_row(2, "Version", PHP_OPENAL_VERSION);
 	php_info_print_table_row(2, "Can load WAV?", 
 #ifdef HAVE_OPENAL_LOADWAV
 							"Yes"
