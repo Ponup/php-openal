@@ -782,7 +782,7 @@ static void php_openal_source_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 	}
 }
 
-function_entry openal_functions[] = {
+zend_function_entry openal_functions[] = {
 	PHP_FE(openal_device_open,		NULL)
 	PHP_FE(openal_device_close,		NULL)
 	PHP_FE(openal_context_create,	NULL)
