@@ -13,6 +13,7 @@
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
    | Author: Sara Golemon <pollita@php.net>                               |
+   | Author: Santiago Lizardo <santiagolizardo@php.net>                   |
    +----------------------------------------------------------------------+
 */
 
@@ -50,13 +51,13 @@ PHP_FUNCTION(openal_device_open)
 		RETURN_FALSE;
 	}
 
-	dev = alcOpenDevice((const ALubyte*)device);
+	dev = alcOpenDevice((const ALCchar*)device);
 	if (!dev) {
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unable to open audio device.");
 		RETURN_FALSE;
 	}
 
-	ZEND_REGISTER_RESOURCE(return_value, dev, le_openal_device);
+	RETURN_RES(zend_register_resource(dev, le_openal_device));
 }
 /* }}} */
 
@@ -72,9 +73,8 @@ PHP_FUNCTION(openal_device_close)
 	}
 
 	/* Verify the resource is actually an le_openal_device */
-	ZEND_FETCH_RESOURCE(dev, ALCdevice *, &zdevice, -1, PHP_OPENAL_RES_DEVICE, le_openal_device);
-
-	RETURN_BOOL(zend_list_delete(Z_LVAL_P(zdevice)) == SUCCESS);
+	dev = (ALCdevice*)zend_fetch_resource(Z_RES_P(zdevice), PHP_OPENAL_RES_DEVICE, le_openal_device);
+	RETURN_BOOL(zend_list_close(Z_RES_P(zdevice)) == SUCCESS);
 }
 /* }}} */
 
@@ -93,7 +93,7 @@ PHP_FUNCTION(openal_context_create)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(dev, ALCdevice *, &zdevice, -1, PHP_OPENAL_RES_DEVICE, le_openal_device);
+	dev = (ALCdevice*)zend_fetch_resource(Z_RES_P(zdevice), PHP_OPENAL_RES_DEVICE, le_openal_device);
 
 	context = alcCreateContext(dev, NULL);
 	if (!context) {
@@ -101,7 +101,7 @@ PHP_FUNCTION(openal_context_create)
 		RETURN_FALSE;
 	}
 
-	ZEND_REGISTER_RESOURCE(return_value, context, le_openal_context);
+	RETURN_RES(zend_register_resource(context, le_openal_context));
 }
 /* }}} */
 
@@ -116,8 +116,8 @@ PHP_FUNCTION(openal_context_current)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(context, ALvoid *, &zcontext, -1, PHP_OPENAL_RES_CONTEXT, le_openal_context);
-
+	context = (ALCcontext*)zend_fetch_resource(Z_RES_P(zcontext), PHP_OPENAL_RES_CONTEXT, le_openal_context);
+	
 	if (!context) {
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid context.");
 		RETURN_FALSE;
@@ -140,7 +140,7 @@ PHP_FUNCTION(openal_context_process)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(context, ALvoid *, &zcontext, -1, PHP_OPENAL_RES_CONTEXT, le_openal_context);
+	context = (ALCcontext*)zend_fetch_resource(Z_RES_P(zcontext), PHP_OPENAL_RES_CONTEXT, le_openal_context);
 
 	if (!context) {
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid context.");
@@ -164,7 +164,8 @@ PHP_FUNCTION(openal_context_suspend)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(context, ALvoid *, &zcontext, -1, PHP_OPENAL_RES_CONTEXT, le_openal_context);
+	context = (ALCcontext*)zend_fetch_resource(Z_RES_P(zcontext), PHP_OPENAL_RES_CONTEXT, le_openal_context);
+	
 
 	if (!context) {
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid context.");
@@ -189,9 +190,9 @@ PHP_FUNCTION(openal_context_destroy)
 	}
 
 	/* Verify the resource is actually an le_openal_context */
-	ZEND_FETCH_RESOURCE(context, ALvoid *, &zcontext, -1, PHP_OPENAL_RES_CONTEXT, le_openal_context);
+	context = (ALCcontext*)zend_fetch_resource(Z_RES_P(zcontext), PHP_OPENAL_RES_CONTEXT, le_openal_context);
 
-	RETURN_BOOL(zend_list_delete(Z_LVAL_P(zcontext)) == SUCCESS);
+	RETURN_BOOL(zend_list_close(Z_RES_P(zcontext)) == SUCCESS);
 }
 /* }}} */
 
@@ -201,7 +202,7 @@ PHP_FUNCTION(openal_context_destroy)
    Generate OpenAL buffer */
 PHP_FUNCTION(openal_buffer_create)
 {
-	ALuint *buffer;
+	ALuint *buffer = NULL;
 
 	if (ZEND_NUM_ARGS() != 0) {
 		WRONG_PARAM_COUNT;
@@ -211,7 +212,7 @@ PHP_FUNCTION(openal_buffer_create)
 
 	alGenBuffers(1, buffer);
 
-	ZEND_REGISTER_RESOURCE(return_value, buffer, le_openal_buffer);
+	RETURN_RES(zend_register_resource(buffer, le_openal_buffer));
 }
 /* }}} */
 
@@ -231,7 +232,7 @@ PHP_FUNCTION(openal_buffer_loadwav)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(buffer, ALuint *, &zbuffer, -1, PHP_OPENAL_RES_BUFFER, le_openal_buffer);
+	buffer = (ALuint*)zend_fetch_resource(Z_RES_P(zbuffer), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
 
 	if (alutLoadWAV(wavfile, &wave, &format, &size, &bits, &freq) == AL_FALSE) {
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unable to load wavefile (%s).", wavfile);
@@ -279,7 +280,7 @@ PHP_FUNCTION(openal_buffer_data)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(buffer, ALuint *, &zbuffer, -1, PHP_OPENAL_RES_BUFFER, le_openal_buffer);
+	buffer = (ALuint*)zend_fetch_resource(Z_RES_P(zbuffer), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
 
 	alBufferData(*buffer, (ALenum)format, (ALvoid *)data, (ALsizei)data_len, (ALsizei)freq);
 
@@ -300,7 +301,7 @@ PHP_FUNCTION(openal_buffer_get)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(buffer, ALuint *, &zbuffer, -1, PHP_OPENAL_RES_BUFFER, le_openal_buffer);
+	buffer = (ALuint*)zend_fetch_resource(Z_RES_P(zbuffer), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
 
 	if (property == AL_FREQUENCY ||
 		property == AL_BITS ||
@@ -327,9 +328,9 @@ PHP_FUNCTION(openal_buffer_destroy)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(buffer, ALuint *, &zbuffer, -1, PHP_OPENAL_RES_BUFFER, le_openal_buffer);
+	buffer = (ALuint*)zend_fetch_resource(Z_RES_P(zbuffer), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
 
-	RETURN_BOOL(zend_list_delete(Z_LVAL_P(zbuffer)) == SUCCESS);
+	RETURN_BOOL(zend_list_close(Z_RES_P(zbuffer)) == SUCCESS);
 }
 /* }}} */
 
@@ -349,7 +350,7 @@ PHP_FUNCTION(openal_source_create)
 
 	alGenSources(1, source);
 
-	ZEND_REGISTER_RESOURCE(return_value, source, le_openal_source);
+	RETURN_RES(zend_register_resource(source, le_openal_source));
 }
 /* }}} */
 
@@ -368,7 +369,7 @@ PHP_FUNCTION(openal_source_get)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(source, ALuint *, &zsource, -1, PHP_OPENAL_RES_SOURCE, le_openal_source);
+	source = (ALuint*)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
 
 	if (property == AL_SOURCE_RELATIVE ||
 		property == AL_SOURCE_STATE) {
@@ -408,7 +409,7 @@ PHP_FUNCTION(openal_source_get)
    Set source property */
 PHP_FUNCTION(openal_source_set)
 {
-	zval *zsource, *zsetting, **zvalue;
+	zval *zsource, *zsetting, *zvalue;
 	ALuint *source, *buffer;
 	long property, i;
 	ALfloat vvalues[3];
@@ -417,30 +418,30 @@ PHP_FUNCTION(openal_source_set)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(source, ALuint *, &zsource, -1, PHP_OPENAL_RES_SOURCE, le_openal_source);
+	source = (ALuint*)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
 
 	if (property == AL_BUFFER) {
 		if (Z_TYPE_P(zsetting) != IS_RESOURCE) {
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Non resource passed while setting buffer.");
 			RETURN_FALSE;
 		}
-		ZEND_FETCH_RESOURCE(buffer, ALuint *, &zsetting, -1, PHP_OPENAL_RES_BUFFER, le_openal_buffer);
+		buffer = (ALuint*)zend_fetch_resource(Z_RES_P(zsetting), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
 		alSourcei(*source, (ALenum)property, (ALint)(*buffer));
 		RETURN_TRUE;
 	}
 	if (property == AL_LOOPING) {
-		if (Z_TYPE_P(zsetting) == IS_BOOL) {
+		if (Z_TYPE_P(zsetting) == IS_TRUE || Z_TYPE_P(zsetting) == IS_FALSE) {
 			/* Let PHP's true/false act like OpenAL's AL_TRUE/AL_FALSE */
-			alSourcei(*source, (ALenum)property, Z_LVAL_P(zsetting) ? AL_TRUE : AL_FALSE);
+			alSourcei(*source, (ALenum)property, Z_LVAL_P(zsetting) == IS_TRUE ? AL_TRUE : AL_FALSE);
 		} else {
-			convert_to_long_ex(&zsetting);
+			convert_to_long_ex(zsetting);
 			alSourcei(*source, (ALenum)property, (ALint)Z_LVAL_P(zsetting));
 		}
 		RETURN_TRUE;
 	}
 	if (property == AL_SOURCE_RELATIVE ||
 		property == AL_SOURCE_STATE) {
-		convert_to_long_ex(&zsetting);
+		convert_to_long_ex(zsetting);
 		alSourcei(*source, (ALenum)property, (ALint)Z_LVAL_P(zsetting));
 		RETURN_TRUE;
 	}
@@ -454,7 +455,7 @@ PHP_FUNCTION(openal_source_set)
 		property == AL_CONE_INNER_ANGLE ||
 		property == AL_CONE_OUTER_ANGLE ||
 		property == AL_REFERENCE_DISTANCE) {
-		convert_to_double_ex(&zsetting);
+		convert_to_double_ex(zsetting);
 		alSourcef(*source, (ALenum)property, (ALfloat)Z_DVAL_P(zsetting));
 		RETURN_TRUE;
 	}
@@ -466,12 +467,12 @@ PHP_FUNCTION(openal_source_set)
 			RETURN_FALSE;
 		}
 		for(i = 0; i < 3; i++) {
-			if (zend_hash_index_find(HASH_OF(zsetting), i, (void **)&zvalue) != SUCCESS) {
+			if ((zvalue = zend_hash_index_find(HASH_OF(zsetting), i)) == NULL) {
 				php_error_docref(NULL TSRMLS_CC, E_WARNING, "setting[%ld] not found.", i);
 				RETURN_FALSE;
 			}
 			convert_to_double_ex(zvalue);
-			vvalues[i] = (ALfloat)Z_DVAL_PP(zvalue);
+			vvalues[i] = (ALfloat)Z_DVAL_P(zvalue);
 		}
 		alSourcefv(*source, (ALenum)property, vvalues);
 		RETURN_TRUE;
@@ -493,7 +494,7 @@ PHP_FUNCTION(openal_source_play)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(source, ALuint *, &zsource, -1, PHP_OPENAL_RES_SOURCE, le_openal_source);
+	source = (ALuint*)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
 
 	alSourcePlay(*source);
 
@@ -512,7 +513,7 @@ PHP_FUNCTION(openal_source_pause)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(source, ALuint *, &zsource, -1, PHP_OPENAL_RES_SOURCE, le_openal_source);
+	source = (ALuint*)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
 
 	alSourcePause(*source);
 
@@ -531,7 +532,7 @@ PHP_FUNCTION(openal_source_stop)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(source, ALuint *, &zsource, -1, PHP_OPENAL_RES_SOURCE, le_openal_source);
+	source = (ALuint*)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
 
 	alSourceStop(*source);
 
@@ -550,7 +551,7 @@ PHP_FUNCTION(openal_source_rewind)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(source, ALuint *, &zsource, -1, PHP_OPENAL_RES_SOURCE, le_openal_source);
+	source = (ALuint*)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
 
 	alSourceRewind(*source);
 
@@ -569,9 +570,9 @@ PHP_FUNCTION(openal_source_destroy)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(source, ALuint *, &zsource, -1, PHP_OPENAL_RES_SOURCE, le_openal_source);
+	source = (ALuint*)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
 
-	RETURN_BOOL(zend_list_delete(Z_LVAL_P(zsource)) == SUCCESS);
+	RETURN_BOOL(zend_list_close(Z_RES_P(zsource)) == SUCCESS);
 }
 /* }}} */
 
@@ -582,7 +583,7 @@ PHP_FUNCTION(openal_source_destroy)
 PHP_FUNCTION(openal_listener_set)
 {
 	long property, i;
-	zval *zsetting, **zvalue;
+	zval *zsetting, *zvalue;
 	ALfloat vvalues[6];
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lz", &property, &zsetting) == FAILURE) {
@@ -590,7 +591,7 @@ PHP_FUNCTION(openal_listener_set)
 	}
 
 	if (property == AL_GAIN) {
-		convert_to_double_ex(&zsetting);
+		convert_to_double_ex(zsetting);
 		alListenerf((ALenum)property, Z_DVAL_P(zsetting));
 		RETURN_TRUE;
 	}
@@ -602,12 +603,12 @@ PHP_FUNCTION(openal_listener_set)
 			RETURN_FALSE;
 		}
 		for(i = 0; i < (property == AL_ORIENTATION ? 6 : 3); i++) {
-			if (zend_hash_index_find(HASH_OF(zsetting), i, (void **)&zvalue) != SUCCESS) {
+			if ((zvalue = zend_hash_index_find(HASH_OF(zsetting), i)) == NULL) {
 				php_error_docref(NULL TSRMLS_CC, E_WARNING, "setting[%ld] not found.", i);
 				RETURN_FALSE;
 			}
 			convert_to_double_ex(zvalue);
-			vvalues[i] = (ALfloat)Z_DVAL_PP(zvalue);
+			vvalues[i] = (ALfloat)Z_DVAL_P(zvalue);
 		}
 		alListenerfv((ALenum)property, vvalues);
 		RETURN_TRUE;
@@ -720,7 +721,7 @@ PHP_FUNCTION(openal_stream)
 		RETURN_FALSE;
 	}
 
-	ZEND_FETCH_RESOURCE(source, ALuint *, &zsource, -1, PHP_OPENAL_RES_SOURCE, le_openal_source);
+	source = (ALuint*)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
 
     data = emalloc(sizeof(php_openal_stream_data));
 	data->format = format;
@@ -744,7 +745,7 @@ PHP_FUNCTION(openal_stream)
 
 /* Module Housekeeping */
 
-static void php_openal_device_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+static void php_openal_device_dtor(zend_resource *rsrc TSRMLS_DC)
 {
 	ALCdevice *dev = (ALCdevice*)rsrc->ptr;
 
@@ -753,7 +754,7 @@ static void php_openal_device_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 	}
 }
 
-static void php_openal_context_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+static void php_openal_context_dtor(zend_resource *rsrc TSRMLS_DC)
 {
 	ALCcontext *context = (ALvoid*)rsrc->ptr;
 
@@ -762,7 +763,7 @@ static void php_openal_context_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 	}
 }
 
-static void php_openal_buffer_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+static void php_openal_buffer_dtor(zend_resource *rsrc TSRMLS_DC)
 {
 	ALuint *buffer = (ALuint *)rsrc->ptr;
 
@@ -772,7 +773,7 @@ static void php_openal_buffer_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 	}
 }
 
-static void php_openal_source_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+static void php_openal_source_dtor(zend_resource *rsrc TSRMLS_DC)
 {
 	ALuint *source = (ALuint *)rsrc->ptr;
 

@@ -13,6 +13,7 @@
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
    | Author: Sara Golemon <pollita@php.net>                               |
+   | Author: Santiago Lizardo <santiagolizardo@php.net>                   |
    +----------------------------------------------------------------------+
 */
 
