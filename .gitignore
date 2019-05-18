@@ -22,3 +22,7 @@ config.nice
 config.status
 libtool
 php_openal.loT
+*.lo
+*.la
+.libs
+modules
