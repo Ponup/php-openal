@@ -1,50 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.9.0" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
-http://pear.php.net/dtd/tasks-1.0.xsd
-http://pear.php.net/dtd/package-2.0
-http://pear.php.net/dtd/package-2.0.xsd">
- <name>openal</name>
- <channel>pecl.php.net</channel>
- <summary>OpenAL Bindings</summary>
- <description>OpenAL - Platform independent sound bindings
- </description>
- <lead>
-  <name>Sara Golemon</name>
-  <user>pollita</user>
-  <email>pollita@php.net</email>
-  <active>yes</active>
- </lead>
- <date>2009-11-05</date>
- <time>17:52:40</time>
- <version>
-  <release>0.1</release>
-  <api>0.1</api>
- </version>
- <stability>
-  <release>beta</release>
-  <api>beta</api>
- </stability>
- <license uri="http://www.php.net/license">PHP</license>
- <notes>
-Initial Release
- </notes>
- <contents>
-  <dir name="/">
-   <file name="config.m4" role="src" />
-   <file name="php_openal.c" role="src" />
-   <file name="php_openal.h" role="src" />
-  </dir> <!-- / -->
- </contents>
- <dependencies>
-  <required>
-   <php>
-    <min>4.3.0</min>
-   </php>
-   <pearinstaller>
-    <min>1.4.0b1</min>
-   </pearinstaller>
-  </required>
- </dependencies>
- <providesextension>openal</providesextension>
- <extsrcrelease />
+<package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packagerversion="1.9.0" version="2.0" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+  <name>openal</name>
+  <channel>pecl.php.net</channel>
+  <summary>OpenAL Bindings</summary>
+  <description>OpenAL - Platform independent sound bindings</description>
+  <lead>
+    <name>Santiago Lizardo</name>
+    <user>santiagolizardo</user>
+    <email>santiagolizardo@php.net</email>
+    <active>yes</active>
+  </lead>
+  <lead>
+    <name>Sara Golemon</name>
+    <user>pollita</user>
+    <email>pollita@php.net</email>
+    <active>no</active>
+  </lead>
+  <date>2019-05-19</date>
+  <version>
+    <release>0.9</release>
+    <api>0.9</api>
+  </version>
+  <stability>
+    <release>stable</release>
+    <api>stable</api>
+  </stability>
+  <license uri="http://www.php.net/license">PHP</license>
+  <notes>Initial Release</notes>
+  <contents>
+    <dir name="/">
+      <file name="config.m4" role="src"/>
+      <file name="php_openal.c" role="src"/>
+      <file name="php_openal.h" role="src"/>
+    </dir>
+  </contents>
+  <dependencies>
+    <required>
+      <php>
+        <min>7.3.0</min>
+      </php>
+      <pearinstaller>
+        <min>1.4.8</min>
+      </pearinstaller>
+    </required>
+  </dependencies>
+  <providesextension>openal</providesextension>
+  <extsrcrelease/>
+  <changelog>
+    <release>
+      <stability>
+        <release>beta</release>
+        <api>beta</api>
+      </stability>
+      <date>2009-11-05</date>
+      <notes>Initial Release</notes>
+      <version>
+        <release>0.1</release>
+        <api>0.1</api>
+      </version>
+    </release>
+  </changelog>
 </package>
