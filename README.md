@@ -27,6 +27,10 @@ openal_device_close($device);
 - PHP7
 - OpenAL library and headers
 
+## Documentation
+
+https://www.php.net/manual/en/book.openal.php
+
 ## Building
 
 ```sh
