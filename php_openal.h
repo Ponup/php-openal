@@ -30,10 +30,6 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
-#ifdef HAVE_AL_ALUT_H
-#include <AL/alut.h>
-#endif
-
 #ifdef HAVE_AL_ALEXT_H
 #include <AL/alext.h>
 #endif
@@ -75,10 +71,6 @@ PHP_FUNCTION(openal_source_rewind);
 PHP_FUNCTION(openal_source_destroy);
 PHP_FUNCTION(openal_listener_get);
 PHP_FUNCTION(openal_listener_set);
-
-#ifdef HAVE_OPENAL_LOADWAV
-PHP_FUNCTION(openal_buffer_loadwav);
-#endif
 
 #ifdef HAVE_OPENAL_STREAM
 /* Release 0.1 Note: 

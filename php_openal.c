@@ -216,39 +216,6 @@ PHP_FUNCTION(openal_buffer_create)
 }
 /* }}} */
 
-#ifdef HAVE_OPENAL_LOADWAV
-/* {{{ proto bool openal_buffer_loadwav(resource buffer, string wavfile)
-   Load a .wav file into a buffer */
-PHP_FUNCTION(openal_buffer_loadwav)
-{
-	zval *zbuffer;
-	ALuint *buffer;
-	char *wavfile;
-	int wavfile_len;
-	void *wave;
-	ALsizei format, size, bits, freq;
-
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rs", &zbuffer, &wavfile, &wavfile_len) == FAILURE) {
-		RETURN_FALSE;
-	}
-
-	buffer = (ALuint*)zend_fetch_resource(Z_RES_P(zbuffer), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
-
-	if (alutLoadWAV(wavfile, &wave, &format, &size, &bits, &freq) == AL_FALSE) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unable to load wavefile (%s).", wavfile);
-		RETURN_FALSE;
-	}
-
-	alBufferData(*buffer, format, wave, size, freq);
-
-	/* Unload wave, a copy exists in buffer */
-	alutUnloadWAV(format, wave, size, freq);
-
-	RETURN_TRUE;
-}
-/* }}} */
-#endif
-
 /* {{{ proto bool openal_buffer_data(resource buffer, int format, string data, int freq)
    Load a buffer with data */
 PHP_FUNCTION(openal_buffer_data)
@@ -792,9 +759,6 @@ zend_function_entry openal_functions[] = {
 	PHP_FE(openal_context_suspend,	NULL)
 	PHP_FE(openal_context_destroy,	NULL)
 	PHP_FE(openal_buffer_create,	NULL)
-#ifdef HAVE_OPENAL_LOADWAV
-	PHP_FE(openal_buffer_loadwav,	NULL)
-#endif
 	PHP_FE(openal_buffer_get,		NULL)
 	PHP_FE(openal_buffer_data,		NULL)
 	PHP_FE(openal_buffer_destroy,	NULL)
@@ -903,13 +867,6 @@ PHP_MINFO_FUNCTION(openal)
 	php_info_print_table_start();
 	php_info_print_table_row(2, "OpenAL Extension", "enabled");
 	php_info_print_table_row(2, "Version", PHP_OPENAL_VERSION);
-	php_info_print_table_row(2, "Can load WAV?", 
-#ifdef HAVE_OPENAL_LOADWAV
-							"Yes"
-#else
-							"No"
-#endif
-									);
 	php_info_print_table_row(2, "Can Stream?",
 #ifdef HAVE_OPENAL_STREAM
 							"Yes"
