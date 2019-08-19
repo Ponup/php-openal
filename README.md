@@ -40,3 +40,9 @@ $ make
 $ sudo make install
 ```
 
+## Packaging
+
+```sh
+$ pear package # This will generate an openal-X.X.X.tgz to push to pecl.php.net
+```
+
