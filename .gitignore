@@ -26,3 +26,4 @@ php_openal.loT
 *.la
 .libs
 modules
+*.tgz
