@@ -18,8 +18,8 @@
   </lead>
   <date>2019-08-19</date>
   <version>
-    <release>0.9</release>
-    <api>0.9</api>
+    <release>0.9.0</release>
+    <api>0.9.0</api>
   </version>
   <stability>
     <release>stable</release>
