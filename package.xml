@@ -16,7 +16,7 @@
     <email>pollita@php.net</email>
     <active>no</active>
   </lead>
-  <date>2019-05-19</date>
+  <date>2019-08-19</date>
   <version>
     <release>0.9</release>
     <api>0.9</api>
@@ -26,7 +26,7 @@
     <api>stable</api>
   </stability>
   <license uri="http://www.php.net/license">PHP</license>
-  <notes>Initial Release</notes>
+  <notes>Extension ported to PHP7</notes>
   <contents>
     <dir name="/">
       <file name="config.m4" role="src"/>
