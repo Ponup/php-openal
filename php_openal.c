@@ -47,13 +47,13 @@ PHP_FUNCTION(openal_device_open)
 	char *device = NULL;
 	long device_len = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &device, &device_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|s", &device, &device_len) == FAILURE) {
 		RETURN_FALSE;
 	}
 
 	dev = alcOpenDevice((const ALCchar*)device);
 	if (!dev) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unable to open audio device.");
+		php_error_docref(NULL, E_WARNING, "Unable to open audio device.");
 		RETURN_FALSE;
 	}
 
@@ -68,7 +68,7 @@ PHP_FUNCTION(openal_device_close)
 	zval *zdevice;
 	ALCdevice *dev;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zdevice) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zdevice) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -89,7 +89,7 @@ PHP_FUNCTION(openal_context_create)
 	ALCdevice *dev;
 	ALCcontext *context;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zdevice) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zdevice) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -97,7 +97,7 @@ PHP_FUNCTION(openal_context_create)
 
 	context = alcCreateContext(dev, NULL);
 	if (!context) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unable to create context.");
+		php_error_docref(NULL, E_WARNING, "Unable to create context.");
 		RETURN_FALSE;
 	}
 
@@ -112,14 +112,14 @@ PHP_FUNCTION(openal_context_current)
 	zval *zcontext;
 	ALCcontext *context;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zcontext) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zcontext) == FAILURE) {
 		RETURN_FALSE;
 	}
 
 	context = (ALCcontext*)zend_fetch_resource(Z_RES_P(zcontext), PHP_OPENAL_RES_CONTEXT, le_openal_context);
 	
 	if (!context) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid context.");
+		php_error_docref(NULL, E_WARNING, "Invalid context.");
 		RETURN_FALSE;
 	}
 
@@ -136,14 +136,14 @@ PHP_FUNCTION(openal_context_process)
 	zval *zcontext;
 	ALCcontext *context;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zcontext) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zcontext) == FAILURE) {
 		RETURN_FALSE;
 	}
 
 	context = (ALCcontext*)zend_fetch_resource(Z_RES_P(zcontext), PHP_OPENAL_RES_CONTEXT, le_openal_context);
 
 	if (!context) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid context.");
+		php_error_docref(NULL, E_WARNING, "Invalid context.");
 		RETURN_FALSE;
 	}
 
@@ -160,7 +160,7 @@ PHP_FUNCTION(openal_context_suspend)
 	zval *zcontext;
 	ALCcontext *context;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zcontext) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zcontext) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -168,7 +168,7 @@ PHP_FUNCTION(openal_context_suspend)
 	
 
 	if (!context) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid context.");
+		php_error_docref(NULL, E_WARNING, "Invalid context.");
 		RETURN_FALSE;
 	}
 
@@ -185,7 +185,7 @@ PHP_FUNCTION(openal_context_destroy)
 	zval *zcontext;
 	ALCcontext *context;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zcontext) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zcontext) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -225,7 +225,7 @@ PHP_FUNCTION(openal_buffer_data)
 	long format, freq, data_len;
 	char *data;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rlsl", &zbuffer, &format, &data, &data_len, &freq) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rlsl", &zbuffer, &format, &data, &data_len, &freq) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -233,17 +233,17 @@ PHP_FUNCTION(openal_buffer_data)
 		format != AL_FORMAT_MONO16 &&
 		format != AL_FORMAT_STEREO8 &&
 		format != AL_FORMAT_STEREO16) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid format.");
+		php_error_docref(NULL, E_WARNING, "Invalid format.");
 		RETURN_FALSE;
 	}
 
 	if (freq < 8000 || freq > 48000) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid frequency.");
+		php_error_docref(NULL, E_WARNING, "Invalid frequency.");
 		RETURN_FALSE;
 	}
 
 	if (data_len <= 0) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid data length.");
+		php_error_docref(NULL, E_WARNING, "Invalid data length.");
 		RETURN_FALSE;
 	}
 
@@ -264,7 +264,7 @@ PHP_FUNCTION(openal_buffer_get)
 	long property;
 	ALint value;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &zbuffer, &property) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rl", &zbuffer, &property) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -291,7 +291,7 @@ PHP_FUNCTION(openal_buffer_destroy)
 	zval *zbuffer;
 	ALuint *buffer;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zbuffer) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zbuffer) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -332,7 +332,7 @@ PHP_FUNCTION(openal_source_get)
 	ALfloat dvalue;
 	ALfloat vvalues[3];
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &zsource, &property) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rl", &zsource, &property) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -367,7 +367,7 @@ PHP_FUNCTION(openal_source_get)
 		return;
 	}
 
-	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid property.");
+	php_error_docref(NULL, E_WARNING, "Invalid property.");
 	RETURN_FALSE;
 }
 /* }}} */
@@ -381,7 +381,7 @@ PHP_FUNCTION(openal_source_set)
 	long property, i;
 	ALfloat vvalues[3];
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rlz", &zsource, &property, &zsetting) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rlz", &zsource, &property, &zsetting) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -389,7 +389,7 @@ PHP_FUNCTION(openal_source_set)
 
 	if (property == AL_BUFFER) {
 		if (Z_TYPE_P(zsetting) != IS_RESOURCE) {
-			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Non resource passed while setting buffer.");
+			php_error_docref(NULL, E_WARNING, "Non resource passed while setting buffer.");
 			RETURN_FALSE;
 		}
 		buffer = (ALuint*)zend_fetch_resource(Z_RES_P(zsetting), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
@@ -430,12 +430,12 @@ PHP_FUNCTION(openal_source_set)
 		property == AL_VELOCITY ||
 		property == AL_DIRECTION) {
 		if (Z_TYPE_P(zsetting) != IS_ARRAY) {
-			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Non array setting passed for array property.");
+			php_error_docref(NULL, E_WARNING, "Non array setting passed for array property.");
 			RETURN_FALSE;
 		}
 		for(i = 0; i < 3; i++) {
 			if ((zvalue = zend_hash_index_find(HASH_OF(zsetting), i)) == NULL) {
-				php_error_docref(NULL TSRMLS_CC, E_WARNING, "setting[%ld] not found.", i);
+				php_error_docref(NULL, E_WARNING, "setting[%ld] not found.", i);
 				RETURN_FALSE;
 			}
 			convert_to_double_ex(zvalue);
@@ -445,7 +445,7 @@ PHP_FUNCTION(openal_source_set)
 		RETURN_TRUE;
 	}
 
-	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid property.");
+	php_error_docref(NULL, E_WARNING, "Invalid property.");
 	RETURN_FALSE;
 }
 /* }}} */
@@ -457,7 +457,7 @@ PHP_FUNCTION(openal_source_play)
 	zval *zsource;
 	ALuint *source;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zsource) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zsource) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -476,7 +476,7 @@ PHP_FUNCTION(openal_source_pause)
 	zval *zsource;
 	ALuint *source;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zsource) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zsource) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -495,7 +495,7 @@ PHP_FUNCTION(openal_source_stop)
 	zval *zsource;
 	ALuint *source;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zsource) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zsource) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -514,7 +514,7 @@ PHP_FUNCTION(openal_source_rewind)
 	zval *zsource;
 	ALuint *source;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zsource) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zsource) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -533,7 +533,7 @@ PHP_FUNCTION(openal_source_destroy)
 	zval *zsource;
 	ALuint *source;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zsource) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zsource) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -553,7 +553,7 @@ PHP_FUNCTION(openal_listener_set)
 	zval *zsetting, *zvalue;
 	ALfloat vvalues[6];
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lz", &property, &zsetting) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "lz", &property, &zsetting) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -566,12 +566,12 @@ PHP_FUNCTION(openal_listener_set)
 		property == AL_VELOCITY ||
 		property == AL_ORIENTATION) {
 		if (Z_TYPE_P(zsetting) != IS_ARRAY) {
-			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Non array setting passed for array property.");
+			php_error_docref(NULL, E_WARNING, "Non array setting passed for array property.");
 			RETURN_FALSE;
 		}
 		for(i = 0; i < (property == AL_ORIENTATION ? 6 : 3); i++) {
 			if ((zvalue = zend_hash_index_find(HASH_OF(zsetting), i)) == NULL) {
-				php_error_docref(NULL TSRMLS_CC, E_WARNING, "setting[%ld] not found.", i);
+				php_error_docref(NULL, E_WARNING, "setting[%ld] not found.", i);
 				RETURN_FALSE;
 			}
 			convert_to_double_ex(zvalue);
@@ -581,7 +581,7 @@ PHP_FUNCTION(openal_listener_set)
 		RETURN_TRUE;
 	}
 
-	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid property.");
+	php_error_docref(NULL, E_WARNING, "Invalid property.");
 	RETURN_FALSE;
 }
 /* }}} */
@@ -594,7 +594,7 @@ PHP_FUNCTION(openal_listener_get)
 	ALfloat fval;
 	ALfloat vval[6];
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &property) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &property) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -620,7 +620,7 @@ PHP_FUNCTION(openal_listener_get)
 		return;
 	}
 
-	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid property.");
+	php_error_docref(NULL, E_WARNING, "Invalid property.");
 	RETURN_FALSE;
 }
 /* }}} */
@@ -634,7 +634,7 @@ typedef struct _php_openal_stream_data {
 	ALuint rate;
 } php_openal_stream_data;
 
-static size_t php_openal_stream_write(php_stream *stream, const char *buf, size_t count TSRMLS_DC)
+static size_t php_openal_stream_write(php_stream *stream, const char *buf, size_t count)
 {
 	php_openal_stream_data *data = (php_openal_stream_data *)stream->abstract;
 	size_t written = 0;
@@ -649,7 +649,7 @@ static size_t php_openal_stream_write(php_stream *stream, const char *buf, size_
 	return written;
 }
 
-static int php_openal_stream_close(php_stream *stream, int close_handle TSRMLS_DC)
+static int php_openal_stream_close(php_stream *stream, int close_handle)
 {
 	php_openal_stream_data *data = (php_openal_stream_data *)stream->abstract;
 
@@ -684,7 +684,7 @@ PHP_FUNCTION(openal_stream)
 	php_openal_stream_data *data;
 	php_stream *stream;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rll", &zsource, &format, &rate) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rll", &zsource, &format, &rate) == FAILURE) {
 		RETURN_FALSE;
 	}
 
@@ -712,7 +712,7 @@ PHP_FUNCTION(openal_stream)
 
 /* Module Housekeeping */
 
-static void php_openal_device_dtor(zend_resource *rsrc TSRMLS_DC)
+static void php_openal_device_dtor(zend_resource *rsrc)
 {
 	ALCdevice *dev = (ALCdevice*)rsrc->ptr;
 
@@ -721,7 +721,7 @@ static void php_openal_device_dtor(zend_resource *rsrc TSRMLS_DC)
 	}
 }
 
-static void php_openal_context_dtor(zend_resource *rsrc TSRMLS_DC)
+static void php_openal_context_dtor(zend_resource *rsrc)
 {
 	ALCcontext *context = (ALvoid*)rsrc->ptr;
 
@@ -730,7 +730,7 @@ static void php_openal_context_dtor(zend_resource *rsrc TSRMLS_DC)
 	}
 }
 
-static void php_openal_buffer_dtor(zend_resource *rsrc TSRMLS_DC)
+static void php_openal_buffer_dtor(zend_resource *rsrc)
 {
 	ALuint *buffer = (ALuint *)rsrc->ptr;
 
@@ -740,7 +740,7 @@ static void php_openal_buffer_dtor(zend_resource *rsrc TSRMLS_DC)
 	}
 }
 
-static void php_openal_source_dtor(zend_resource *rsrc TSRMLS_DC)
+static void php_openal_source_dtor(zend_resource *rsrc)
 {
 	ALuint *source = (ALuint *)rsrc->ptr;
 
