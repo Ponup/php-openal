@@ -29,6 +29,7 @@
   <notes>Extension ported to PHP7</notes>
   <contents>
     <dir name="/">
+      <file name="LICENSE" role="doc"/>
       <file name="config.m4" role="src"/>
       <file name="php_openal.c" role="src"/>
       <file name="php_openal.h" role="src"/>
