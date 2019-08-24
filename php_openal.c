@@ -45,7 +45,7 @@ PHP_FUNCTION(openal_device_open)
 {
 	ALCdevice *dev;
 	char *device = NULL;
-	long device_len = 0;
+	size_t device_len = 0;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|s", &device, &device_len) == FAILURE) {
 		RETURN_FALSE;
@@ -66,14 +66,14 @@ PHP_FUNCTION(openal_device_open)
 PHP_FUNCTION(openal_device_close)
 {
 	zval *zdevice;
-	ALCdevice *dev;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zdevice) == FAILURE) {
 		RETURN_FALSE;
 	}
 
 	/* Verify the resource is actually an le_openal_device */
-	dev = (ALCdevice*)zend_fetch_resource(Z_RES_P(zdevice), PHP_OPENAL_RES_DEVICE, le_openal_device);
+	zend_fetch_resource(Z_RES_P(zdevice), PHP_OPENAL_RES_DEVICE, le_openal_device);
+
 	RETURN_BOOL(zend_list_close(Z_RES_P(zdevice)) == SUCCESS);
 }
 /* }}} */
@@ -183,14 +183,13 @@ PHP_FUNCTION(openal_context_suspend)
 PHP_FUNCTION(openal_context_destroy)
 {
 	zval *zcontext;
-	ALCcontext *context;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zcontext) == FAILURE) {
 		RETURN_FALSE;
 	}
 
 	/* Verify the resource is actually an le_openal_context */
-	context = (ALCcontext*)zend_fetch_resource(Z_RES_P(zcontext), PHP_OPENAL_RES_CONTEXT, le_openal_context);
+	zend_fetch_resource(Z_RES_P(zcontext), PHP_OPENAL_RES_CONTEXT, le_openal_context);
 
 	RETURN_BOOL(zend_list_close(Z_RES_P(zcontext)) == SUCCESS);
 }
@@ -222,7 +221,8 @@ PHP_FUNCTION(openal_buffer_data)
 {
 	zval *zbuffer;
 	ALuint *buffer;
-	long format, freq, data_len;
+	zend_long format, freq;
+	size_t data_len;
 	char *data;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rlsl", &zbuffer, &format, &data, &data_len, &freq) == FAILURE) {
@@ -261,7 +261,7 @@ PHP_FUNCTION(openal_buffer_get)
 {
 	zval *zbuffer;
 	ALuint *buffer;
-	long property;
+	zend_long property;
 	ALint value;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rl", &zbuffer, &property) == FAILURE) {
@@ -289,13 +289,12 @@ PHP_FUNCTION(openal_buffer_get)
 PHP_FUNCTION(openal_buffer_destroy)
 {
 	zval *zbuffer;
-	ALuint *buffer;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zbuffer) == FAILURE) {
 		RETURN_FALSE;
 	}
 
-	buffer = (ALuint*)zend_fetch_resource(Z_RES_P(zbuffer), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
+	zend_fetch_resource(Z_RES_P(zbuffer), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
 
 	RETURN_BOOL(zend_list_close(Z_RES_P(zbuffer)) == SUCCESS);
 }
@@ -327,7 +326,7 @@ PHP_FUNCTION(openal_source_get)
 {
 	zval *zsource;
 	ALuint *source;
-	long property;
+	zend_long property;
 	ALint lvalue;
 	ALfloat dvalue;
 	ALfloat vvalues[3];
@@ -378,7 +377,8 @@ PHP_FUNCTION(openal_source_set)
 {
 	zval *zsource, *zsetting, *zvalue;
 	ALuint *source, *buffer;
-	long property, i;
+	long i;
+	zend_long property;
 	ALfloat vvalues[3];
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rlz", &zsource, &property, &zsetting) == FAILURE) {
@@ -531,13 +531,12 @@ PHP_FUNCTION(openal_source_rewind)
 PHP_FUNCTION(openal_source_destroy)
 {
 	zval *zsource;
-	ALuint *source;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &zsource) == FAILURE) {
 		RETURN_FALSE;
 	}
 
-	source = (ALuint*)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
+	zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
 
 	RETURN_BOOL(zend_list_close(Z_RES_P(zsource)) == SUCCESS);
 }
@@ -549,7 +548,8 @@ PHP_FUNCTION(openal_source_destroy)
    Set a listener property */
 PHP_FUNCTION(openal_listener_set)
 {
-	long property, i;
+	zend_long property;
+	long i;
 	zval *zsetting, *zvalue;
 	ALfloat vvalues[6];
 
@@ -590,7 +590,7 @@ PHP_FUNCTION(openal_listener_set)
    Retrieve a listener property */
 PHP_FUNCTION(openal_listener_get)
 {
-	long property;
+	zend_long property;
 	ALfloat fval;
 	ALfloat vval[6];
 
@@ -680,7 +680,7 @@ PHP_FUNCTION(openal_stream)
 {
 	zval *zsource;
 	ALuint *source;
-	long format, rate;
+	zend_long format, rate;
 	php_openal_stream_data *data;
 	php_stream *stream;
 
