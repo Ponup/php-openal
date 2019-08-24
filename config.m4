@@ -1,6 +1,10 @@
 PHP_ARG_WITH(openal, whether to enable PHP-OpenAL,
 [  --with-openal[=DIR]       Enable OpenAL Bindings.])
 
+PHP_ARG_ENABLE(openal-debug, whether to enable PHP-OpenAL debug support,
+[  --enable-openal-debug     Enable OpenAL debug support], no, no)
+
+
 if test "$PHP_OPENAL" != "no"; then
 
   AC_DEFINE(WITH_OPENAL, 1, [Whether you want PHP-OpenAL])
@@ -20,6 +24,12 @@ if test "$PHP_OPENAL" != "no"; then
       PHP_ADD_INCLUDE($i/include)
     fi
   done
+
+  dnl {{{ --enable-openal-debug
+  if test "$PHP_OPENAL_DEBUG" != "no"; then
+    CFLAGS="$CFLAGS -Wall -Wpedantic -g -ggdb -O0"
+  fi
+  dnl }}}
 
   if test -z "$OPENAL_DIR"; then
     AC_MSG_RESULT([not found])
