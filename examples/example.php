@@ -1,14 +1,18 @@
 <?php declare(strict_types=1);
 
-dl('openal.so');
+require __DIR__ . '/vendor/autoload.php';
 
-require 'WaveFileReader.php';
+use Mammoth\Audio\WaveFileReader;
 
 // https://freesound.org/people/Ironi%20Alef/sounds/32226/
-$wave = WaveFileReader::ReadFile('sound.wav', true);
-$waveData = $wave['subchunk2']['data'];
-$waveSampleRate = $wave['subchunk1']['samplerate'];
-$waveLength = ceil(strlen($waveData) / ($waveSampleRate * $wave['subchunk1']['numchannels'] * $wave['subchunk1']['bitspersample'] /8));
+$waveFileReader = new WaveFileReader(__DIR__ . '/sound.wav');
+$wave = $waveFileReader->read(true);
+
+echo 'Wave loaded. Format is ' . $wave->getAudioFormat(), PHP_EOL;
+
+$waveData = $wave->getData();
+$waveSampleRate = $wave->getSampleRate();
+$waveLength = ceil(strlen($waveData) / ($waveSampleRate * $wave->getNumChannels() * $wave->getBitsPerSample() / 8));
 
 $device = openal_device_open();
 $context = openal_context_create($device);
@@ -19,7 +23,7 @@ $buffer = openal_buffer_create();
 openal_buffer_data($buffer, AL_FORMAT_STEREO16, $waveData, $waveSampleRate);
 
 openal_source_set($source, AL_BUFFER, $buffer);
-openal_source_set($source, AL_LOOPING, true);
+openal_source_set($source, AL_LOOPING, false);
 
 openal_source_play($source);
 sleep((int)$waveLength);

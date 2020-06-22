@@ -1,0 +1,7 @@
+{
+	"require": {
+    	"ponup/mammoth": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
