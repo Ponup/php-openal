@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Ponup/php-openal.svg?branch=master)](https://travis-ci.org/Ponup/php-openal)
+
 # PHP-OpenAL
 
 **OpenAL** bindings for PHP.
@@ -30,6 +32,13 @@ openal_device_close($device);
 ## Documentation
 
 https://www.php.net/manual/en/book.openal.php
+
+## Docker
+
+```sh
+$ docker build -t php-openal .
+$ docker run -it --device /dev/snd -e PULSE_SERVER=/tmp/pulse-native -e PULSE_COOKIE=/tmp/pulse-cookie -v $XDG_RUNTIME_DIR/pulse/native:/tmp/pulse-native -v ~/.config/pulse/cookie:/tmp/pulse-cookie --group-add audio --entrypoint php php-openal examples/example.php
+```
 
 ## Building
 
