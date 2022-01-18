@@ -28,3 +28,6 @@ php_openal.loT
 modules
 *.tgz
 vendor
+config.h.in~
+*.dep
+tags

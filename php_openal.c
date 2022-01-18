@@ -73,8 +73,9 @@ PHP_FUNCTION(openal_device_close)
 
 	/* Verify the resource is actually an le_openal_device */
 	zend_fetch_resource(Z_RES_P(zdevice), PHP_OPENAL_RES_DEVICE, le_openal_device);
+	zend_list_close(Z_RES_P(zdevice));
 
-	RETURN_BOOL(zend_list_close(Z_RES_P(zdevice)) == SUCCESS);
+	RETURN_BOOL(SUCCESS);
 }
 /* }}} */
 
@@ -190,8 +191,9 @@ PHP_FUNCTION(openal_context_destroy)
 
 	/* Verify the resource is actually an le_openal_context */
 	zend_fetch_resource(Z_RES_P(zcontext), PHP_OPENAL_RES_CONTEXT, le_openal_context);
+	zend_list_close(Z_RES_P(zcontext));
 
-	RETURN_BOOL(zend_list_close(Z_RES_P(zcontext)) == SUCCESS);
+	RETURN_BOOL(SUCCESS);
 }
 /* }}} */
 
@@ -295,8 +297,9 @@ PHP_FUNCTION(openal_buffer_destroy)
 	}
 
 	zend_fetch_resource(Z_RES_P(zbuffer), PHP_OPENAL_RES_BUFFER, le_openal_buffer);
+	zend_list_close(Z_RES_P(zbuffer));
 
-	RETURN_BOOL(zend_list_close(Z_RES_P(zbuffer)) == SUCCESS);
+	RETURN_BOOL(SUCCESS);
 }
 /* }}} */
 
@@ -537,8 +540,9 @@ PHP_FUNCTION(openal_source_destroy)
 	}
 
 	zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
+	zend_list_close(Z_RES_P(zsource));
 
-	RETURN_BOOL(zend_list_close(Z_RES_P(zsource)) == SUCCESS);
+	RETURN_BOOL(SUCCESS);
 }
 /* }}} */
 
