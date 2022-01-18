@@ -26,7 +26,7 @@ openal_device_close($device);
 
 ## Requirements
 
-- PHP7
+- PHP8.1
 - OpenAL library and headers
 
 ## Documentation
@@ -36,22 +36,22 @@ https://www.php.net/manual/en/book.openal.php
 ## Docker
 
 ```sh
-$ docker build -t php-openal .
-$ docker run -it --device /dev/snd -e PULSE_SERVER=/tmp/pulse-native -e PULSE_COOKIE=/tmp/pulse-cookie -v $XDG_RUNTIME_DIR/pulse/native:/tmp/pulse-native -v ~/.config/pulse/cookie:/tmp/pulse-cookie --group-add audio --entrypoint php php-openal examples/example.php
+docker build -t php-openal .
+docker run -it --device /dev/snd -e PULSE_SERVER=/tmp/pulse-native -e PULSE_COOKIE=/tmp/pulse-cookie -v $XDG_RUNTIME_DIR/pulse/native:/tmp/pulse-native -v ~/.config/pulse/cookie:/tmp/pulse-cookie --group-add audio --entrypoint php php-openal examples/example.php
 ```
 
 ## Building
 
 ```sh
-$ phpize
-$ ./configure --with-openal=/usr/local/Cellar/openal-soft/1.19.1 # Adjust path accordingly
-$ make
-$ sudo make install
+phpize
+./configure --with-openal=/usr/local/Cellar/openal-soft/1.19.1 # Adjust path accordingly
+make
+sudo make install
 ```
 
 ## Packaging
 
 ```sh
-$ pear package # This will generate an openal-X.X.X.tgz to push to pecl.php.net
+pear package # This will generate an openal-X.X.X.tgz to push to pecl.php.net
 ```
 
