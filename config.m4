@@ -4,7 +4,6 @@ PHP_ARG_WITH(openal, whether to enable PHP-OpenAL,
 PHP_ARG_ENABLE(openal-debug, whether to enable PHP-OpenAL debug support,
 [  --enable-openal-debug     Enable OpenAL debug support], no, no)
 
-
 if test "$PHP_OPENAL" != "no"; then
 
   AC_DEFINE(WITH_OPENAL, 1, [Whether you want PHP-OpenAL])
@@ -43,10 +42,6 @@ if test "$PHP_OPENAL" != "no"; then
   ], [
     AC_MSG_ERROR([libopenal.so not found!])
   ])
-
-  AC_CHECK_LIB(openal, alGenStreamingBuffers_LOKI, [
-    AC_DEFINE(HAVE_OPENAL_STREAM, 1, [Whether you have suport for OpenAL streaming])
-  ],)
 
   PHP_SUBST(OPENAL_SHARED_LIBADD)
   PHP_NEW_EXTENSION(openal, php_openal.c, $ext_shared, , )

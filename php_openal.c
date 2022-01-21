@@ -771,95 +771,6 @@ PHP_FUNCTION(openal_listener_get)
 }
 /* }}} */
 
-#ifdef HAVE_OPENAL_STREAM
-/* Streaming */
-
-typedef struct _php_openal_stream_data
-{
-	ALuint buffer;
-	ALenum format;
-	ALuint rate;
-} php_openal_stream_data;
-
-static size_t php_openal_stream_write(php_stream *stream, const char *buf, size_t count)
-{
-	php_openal_stream_data *data = (php_openal_stream_data *)stream->abstract;
-	size_t written = 0;
-
-	while (written < count)
-	{
-		written += alBufferAppendWriteData_LOKI(data->buffer, data->format, (ALshort *)(buf + written), count - written, data->rate, data->format);
-		if (written < count)
-		{
-			usleep(250);
-		}
-	}
-
-	return written;
-}
-
-static int php_openal_stream_close(php_stream *stream, int close_handle)
-{
-	php_openal_stream_data *data = (php_openal_stream_data *)stream->abstract;
-
-	if (data)
-	{
-		alDeleteBuffers(1, &(data->buffer));
-		efree(data);
-		data = NULL;
-	}
-
-	return SUCCESS;
-}
-
-php_stream_ops php_openal_stream_ops = {
-	php_openal_stream_write,
-	NULL, /* read */
-	php_openal_stream_close,
-	NULL, /* flush */
-	"Open AL",
-	NULL, /* seek */
-	NULL, /* cast */
-	NULL, /* stat */
-	NULL  /* set_option */
-};
-
-/* {{{ proto resource openal_stream(resource source, int format, int rate)
-   Begin streaming on a source */
-PHP_FUNCTION(openal_stream)
-{
-	zval *zsource;
-	ALuint *source;
-	zend_long format, rate;
-	php_openal_stream_data *data;
-	php_stream *stream;
-
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rll", &zsource, &format, &rate) == FAILURE)
-	{
-		RETURN_FALSE;
-	}
-
-	source = (ALuint *)zend_fetch_resource(Z_RES_P(zsource), PHP_OPENAL_RES_SOURCE, le_openal_source);
-
-	data = emalloc(sizeof(php_openal_stream_data));
-	data->format = format;
-	data->rate = rate;
-	alGenStreamingBuffers_LOKI(1, &(data->buffer));
-	alSourcei(*source, AL_BUFFER, data->buffer);
-
-	stream = php_stream_alloc(&php_openal_stream_ops, data, NULL, "wb");
-
-	if (!stream)
-	{
-		alDeleteBuffers(1, &(data->buffer));
-		efree(data);
-		RETURN_FALSE;
-	}
-	php_stream_to_zval(stream, return_value);
-}
-/* }}} */
-#endif /* HAVE_OPENAL_STREAM */
-
 /* End of userspace exposure */
 
 /* Module Housekeeping */
@@ -1025,13 +936,6 @@ PHP_MINFO_FUNCTION(openal)
 	php_info_print_table_start();
 	php_info_print_table_row(2, "OpenAL Extension", "enabled");
 	php_info_print_table_row(2, "Version", PHP_OPENAL_VERSION);
-	php_info_print_table_row(2, "Can Stream?",
-#ifdef HAVE_OPENAL_STREAM
-							 "Yes"
-#else
-							 "No"
-#endif
-	);
 	php_info_print_table_end();
 }
 
