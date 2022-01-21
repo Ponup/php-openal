@@ -1,8 +1,6 @@
-/* 
+/*
    +----------------------------------------------------------------------+
-   | PHP Version 7                                                        |
-   +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2019 The PHP Group                                |
+   | Copyright (c) The PHP Group                                |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -12,8 +10,8 @@
    | obtain it through the world-wide-web, please send a note to          |
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
-   | Author: Sara Golemon <pollita@php.net>                               |
-   | Author: Santiago Lizardo <santiagolizardo@php.net>                   |
+   | Authors: Sara Golemon <pollita@php.net>                              |
+   |          Santiago Lizardo <santiagolizardo@php.net>                  |
    +----------------------------------------------------------------------+
 */
 
@@ -34,15 +32,15 @@
 #include <AL/alext.h>
 #endif
 
-#define PHP_OPENAL_VERSION          "0.9.0"
+#define PHP_OPENAL_VERSION "0.10.0"
 
-#define PHP_OPENAL_RES_DEVICE       "Open AL(Device)"
-#define PHP_OPENAL_RES_CONTEXT      "Open AL(Context)"
-#define PHP_OPENAL_RES_BUFFER       "Open AL(Buffer)"
-#define PHP_OPENAL_RES_SOURCE       "Open AL(Source)"
+#define PHP_OPENAL_RES_DEVICE "Open AL(Device)"
+#define PHP_OPENAL_RES_CONTEXT "Open AL(Context)"
+#define PHP_OPENAL_RES_BUFFER "Open AL(Buffer)"
+#define PHP_OPENAL_RES_SOURCE "Open AL(Source)"
 
-#define PHP_OPENAL_DEF_FREQ     44100
-#define PHP_OPENAL_DEF_SYNC     AL_TRUE
+#define PHP_OPENAL_DEF_FREQ 44100
+#define PHP_OPENAL_DEF_SYNC AL_TRUE
 
 extern zend_module_entry openal_module_entry;
 #define phpext_openal_ptr &openal_module_entry
@@ -71,14 +69,6 @@ PHP_FUNCTION(openal_source_rewind);
 PHP_FUNCTION(openal_source_destroy);
 PHP_FUNCTION(openal_listener_get);
 PHP_FUNCTION(openal_listener_set);
-
-#ifdef HAVE_OPENAL_STREAM
-/* Release 0.1 Note: 
-      Streaming is not working correctly 
-      on all platforms/sound cards at this time. 
-      Use at your own risk */
-PHP_FUNCTION(openal_stream);
-#endif
 
 #else
 
