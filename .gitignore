@@ -31,3 +31,4 @@ vendor
 config.h.in~
 *.dep
 tags
+.vscode
